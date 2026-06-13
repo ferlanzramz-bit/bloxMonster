@@ -6,6 +6,7 @@ Junkie.provider = "work"
 
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
+local IsMobile = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
@@ -72,7 +73,11 @@ end
 
 local Configuration = {
 	ScreenGuiName = "JunkieKeySystem",
-	Window = {Size = UDim2.new(0, 333, 0, 500)},
+	Window = {
+		Size = IsMobile
+			and UDim2.new(0.92, 0, 0.75, 0)
+			or UDim2.new(0, 333, 0, 500)
+	},
 	Colors = {
 		Bg = Color3.fromRGB(12, 12, 12),
 		Primary = Color3.fromRGB(59, 130, 246),
@@ -222,7 +227,7 @@ ToastSystem.Create = function(parent, message, toastType, duration, statusCode)
 			oldest:Destroy()
 		end
 	end
-	local toastHeight = 56
+	local toastHeight = IsMobile and 64 or 56
 	local toast = Instance.new("Frame")
 	toast.Name = tick()
 	toast.Size = UDim2.new(0, 0, 0, toastHeight)
@@ -304,7 +309,7 @@ ToastSystem.Create = function(parent, message, toastType, duration, statusCode)
 	end
 	table.insert(ToastSystem.ActiveToasts, toast)
 	ToastSystem.RepositionToasts()
-	local targetWidth = 320
+	local targetWidth = IsMobile and 300 or 320
 	Utils.TweenBack(toast, {Size = UDim2.new(0, targetWidth, 0, toastHeight)}, Configuration.Animations.Medium)
 	task.delay(
 		duration or 3.5,
@@ -359,6 +364,9 @@ local function Build()
 	SetBlur(true)
 	local main = Instance.new("Frame")
 	main.Size = Configuration.Window.Size
+	if IsMobile then
+		main.Size = UDim2.new(0.92, 0, 0.80, 0)
+	end
 	main.Position = UDim2.new(0.5, 0, 0.5, 60)
 	main.AnchorPoint = Vector2.new(0.5, 0.5)
 	main.BackgroundColor3 = Configuration.Colors.Bg
@@ -366,6 +374,11 @@ local function Build()
 	main.ClipsDescendants = true
 	main.Parent = screen
 	Utils.Round(main, 24)
+	if IsMobile then
+		local uiScale = Instance.new("UIScale")
+		uiScale.Scale = 0.95
+		uiScale.Parent = main
+	end
 	Utils.Stroke(main, Color3.new(1, 1, 1), 1, 0.92)
 	local glass = Instance.new("Frame")
 	glass.Size = UDim2.fromScale(1, 1)
@@ -503,7 +516,12 @@ local function Build()
 	sValue.BackgroundTransparency = 1
 	sValue.Parent = statusCard
 	local inputFrame = Instance.new("Frame")
-	inputFrame.Size = UDim2.new(0, 280, 0, 52)
+
+	if IsMobile then
+		inputFrame.Size = UDim2.new(0, 300, 0, 60)
+	else
+		inputFrame.Size = UDim2.new(0, 280, 0, 52)
+	end
 	inputFrame.BackgroundColor3 = Color3.new(1, 1, 1)
 	inputFrame.BackgroundTransparency = 0.975
 	inputFrame.Parent = content
@@ -521,9 +539,9 @@ local function Build()
 	box.Size = UDim2.new(1, -85, 1, 0)
 	box.Position = UDim2.fromOffset(45, 0)
 	box.Text = ""
-	box.PlaceholderText = "Enter your key..."
+	box.PlaceholderText = IsMobile and "Tap here to enter key..." or "Enter your key..."
 	box.TextColor3 = Color3.new(1, 1, 1)
-	box.TextSize = 14
+	box.TextSize = IsMobile and 18 or 14
 	box.Font = Enum.Font.Gotham
 	box.BackgroundTransparency = 1
 	box.TextXAlignment = Enum.TextXAlignment.Left
@@ -537,28 +555,37 @@ local function Build()
 	paste.BackgroundTransparency = 1
 	paste.Parent = inputFrame
 	local btnRow = Instance.new("Frame")
-	btnRow.Size = UDim2.new(0, 280, 0, 50)
+
+	if IsMobile then
+		btnRow.Size = UDim2.new(0, 300, 0, 60)
+	else
+		btnRow.Size = UDim2.new(0, 280, 0, 50)
+	end
 	btnRow.BackgroundTransparency = 1
 	btnRow.Parent = content
 	local redeem = Instance.new("TextButton")
-	redeem.Size = UDim2.new(0.5, -8, 1, 0)
+	redeem.Size = IsMobile
+		and UDim2.new(0.5, -5, 1, 0)
+		or UDim2.new(0.5, -8, 1, 0)
 	redeem.BackgroundColor3 = Configuration.Colors.Primary
 	redeem.Text = "Redeem"
 	redeem.TextColor3 = Color3.new(1, 1, 1)
 	redeem.Font = Enum.Font.GothamBold
-	redeem.TextSize = 14
+	redeem.TextSize = IsMobile and 18 or 14
 	redeem.AutoButtonColor = false
 	redeem.Parent = btnRow
 	Utils.Round(redeem, 14)
 	local getKey = Instance.new("TextButton")
-	getKey.Size = UDim2.new(0.5, -8, 1, 0)
+	getKey.Size = IsMobile
+		and UDim2.new(0.5, -5, 1, 0)
+		or UDim2.new(0.5, -8, 1, 0)
 	getKey.Position = UDim2.new(0.5, 8, 0, 0)
 	getKey.BackgroundColor3 = Color3.new(1, 1, 1)
 	getKey.BackgroundTransparency = 0.955
 	getKey.Text = "Get Key"
 	getKey.TextColor3 = Color3.new(1, 1, 1)
 	getKey.Font = Enum.Font.GothamBold
-	getKey.TextSize = 14
+	getKey.TextSize = IsMobile and 18 or 14
 	getKey.AutoButtonColor = false
 	getKey.Parent = btnRow
 	Utils.Round(getKey, 14)
@@ -738,7 +765,8 @@ local function Build()
 	local dragging, dragStart, startPos
 	bar.InputBegan:Connect(
 		function(input)
-			if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			if input.UserInputType == Enum.UserInputType.MouseButton1
+			or input.UserInputType == Enum.UserInputType.Touch then
 				dragging = true
 				dragStart = input.Position
 				startPos = main.Position
@@ -747,7 +775,10 @@ local function Build()
 	)
 	UserInputService.InputChanged:Connect(
 		function(input)
-			if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+			if dragging and (
+				input.UserInputType == Enum.UserInputType.MouseMovement
+				or input.UserInputType == Enum.UserInputType.Touch
+			) then
 				local delta = input.Position - dragStart
 				main.Position =
 					UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
@@ -756,7 +787,8 @@ local function Build()
 	)
 	UserInputService.InputEnded:Connect(
 		function(input)
-			if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			if input.UserInputType == Enum.UserInputType.MouseButton1
+			or input.UserInputType == Enum.UserInputType.Touch then
 				dragging = false
 			end
 		end
