@@ -75,7 +75,7 @@ local Configuration = {
 	ScreenGuiName = "JunkieKeySystem",
 	Window = {
 		Size = IsMobile
-			and UDim2.new(0.92, 0, 0.75, 0)
+			and UDim2.new(0.90, 0, 0.65, 0)
 			or UDim2.new(0, 333, 0, 500)
 	},
 	Colors = {
@@ -365,7 +365,7 @@ local function Build()
 	local main = Instance.new("Frame")
 	main.Size = Configuration.Window.Size
 	if IsMobile then
-		main.Size = UDim2.new(0.92, 0, 0.65, 0)
+		main.Size = UDim2.new(0.98, 0, 0.65, 0)
 	end
 	main.Position = UDim2.new(0.5, 0, 0.5, 60)
 	main.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -479,7 +479,7 @@ local function Build()
 	subTitle.BackgroundTransparency = 1
 	subTitle.Parent = titleArea
 	local statusCard = Instance.new("Frame")
-	statusCard.Size = UDim2.new(0, 280, 0, 68)
+	statusCard.Size = UDim2.new(0.95, 0, 0, 68)
 	statusCard.BackgroundColor3 = Color3.new(1, 1, 1)
 	statusCard.BackgroundTransparency = 0.96
 	statusCard.Parent = content
@@ -524,7 +524,7 @@ local function Build()
 	local inputFrame = Instance.new("Frame")
 
 	if IsMobile then
-		inputFrame.Size = UDim2.new(0, 300, 0, 60)
+		inputFrame.Size = UDim2.new(0.95, 0, 0, 60)
 	else
 		inputFrame.Size = UDim2.new(0, 280, 0, 52)
 	end
@@ -563,7 +563,7 @@ local function Build()
 	local btnRow = Instance.new("Frame")
 
 	if IsMobile then
-		btnRow.Size = UDim2.new(0, 300, 0, 60)
+		btnRow.Size = UDim2.new(0.95, 0, 0, 60)
 	else
 		btnRow.Size = UDim2.new(0, 280, 0, 50)
 	end
